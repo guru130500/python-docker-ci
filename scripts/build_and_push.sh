@@ -1,6 +1,6 @@
 #!/bin/bash
 # set -e
-# This script shows how to build the Docker image and push it to ECR to be ready for use
+# This script shows how to build the Docker image and push it to ECR Public to be ready for use
 # by SageMaker.
 
 # The argument to this script is the image name. This will be used as the image on the local
@@ -26,8 +26,8 @@ then
     exit 255
 fi
 
-# Get the region defined in the current configuration (default to us-west-2 if none defined)
-region=$AWS_REGION
+# Set the region for ECR Public to us-east-1
+region="us-east-1"
 echo "Region value is : $region"
 
 # If the repository doesn't exist in ECR Public, create it.
@@ -35,12 +35,12 @@ ecr_repo_name=$DOCKER_IMAGE_NAME"-public-ecr-repo"
 echo "value of ecr_repo_name is $ecr_repo_name"
 
 # || means if the first command succeed the second will never be executed
-aws ecr-public describe-repositories --repository-names ${ecr_repo_name} || aws ecr-public create-repository --repository-name ${ecr_repo_name}
+aws ecr-public describe-repositories --repository-names ${ecr_repo_name} --region $region || aws ecr-public create-repository --repository-name ${ecr_repo_name} --region $region
 
 image_name=$DOCKER_IMAGE_NAME-$CODEBUILD_BUILD_NUMBER
 
 # Get the login command from ECR Public and execute docker login
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+aws ecr-public get-login-password --region $region | docker login --username AWS --password-stdin public.ecr.aws
 
 fullname="public.ecr.aws/${account}/${ecr_repo_name}:${image_name}"
 echo "fullname is $fullname"
@@ -66,4 +66,5 @@ then
 else
     echo "Docker Push Event is Successful with Image ${fullname}"
 fi
+
 
