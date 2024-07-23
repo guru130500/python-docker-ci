@@ -45,7 +45,7 @@ fullname="${account}.dkr.ecr.${region}.amazonaws.com/${ecr_repo_name}:$image_nam
 echo "fullname is $fullname"
 # Build the docker image locally with the image name and then push it to ECR with the full name.
 
-docker build -t ${image_name} $CODEBUILD_SRC_DIR/docker_python/
+docker build -t ${image_name} $CODEBUILD_SRC_DIR/
 echo "Docker build after"
 
 echo "image_name is $image_name"
