@@ -16,7 +16,7 @@ then
     echo "Usage: $0 <image-name>"
     exit 1
 fi
-src_dir=$CODEBUILD_SRC_DIR
+src_dir=$WORKSPACE
 
 # Get the account number associated with the current IAM credentials
 account=$(aws sts get-caller-identity --query Account --output text)
@@ -46,7 +46,7 @@ fullname="public.ecr.aws/${account}/${ecr_repo_name}:${image_name}"
 echo "fullname is $fullname"
 
 # Build the docker image locally with the image name and then push it to ECR Public with the full name.
-docker build -t ${image_name} $CODEBUILD_SRC_DIR/
+docker build -t ${image_name} $WORKSPACE
 echo "Docker build after"
 
 echo "image_name is $image_name"
