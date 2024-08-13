@@ -37,7 +37,7 @@ echo "value of ecr_repo_name is $ecr_repo_name"
 # || means if the first command succeed the second will never be executed
 aws ecr-public describe-repositories --repository-names ${ecr_repo_name} --region $region || aws ecr-public create-repository --repository-name ${ecr_repo_name} --region $region
 
-image_name=$DOCKER_IMAGE_NAME-$CODEBUILD_BUILD_NUMBER
+image_name=$DOCKER_IMAGE_NAME
 
 # Get the login command from ECR Public and execute docker login
 aws ecr-public get-login-password --region $region | docker login --username AWS --password-stdin public.ecr.aws
